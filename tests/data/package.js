@@ -9,7 +9,7 @@ var $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.ut
 // Exported root namespace
 var $root = $protobuf.roots.test_package || ($protobuf.roots.test_package = {});
 
-$root.Package = (function() {
+$root.Package = (function(Package) {
 
     /**
      * Properties of a Package.
@@ -724,7 +724,7 @@ $root.Package = (function() {
         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
 
-    Package.Repository = (function() {
+    Package.Repository = (function(Repository) {
 
         /**
          * Properties of a Repository.
@@ -932,9 +932,9 @@ $root.Package = (function() {
         };
 
         return Repository;
-    })();
+    })(Package.Repository || {});
 
     return Package;
-})();
+})($root.Package || {});
 
 module.exports = $root;

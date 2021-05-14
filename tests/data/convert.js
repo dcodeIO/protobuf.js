@@ -9,7 +9,7 @@ var $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.ut
 // Exported root namespace
 var $root = $protobuf.roots.test_convert || ($protobuf.roots.test_convert = {});
 
-$root.Message = (function() {
+$root.Message = (function(Message) {
 
     /**
      * Properties of a Message.
@@ -577,6 +577,6 @@ $root.Message = (function() {
     })();
 
     return Message;
-})();
+})($root.Message || {});
 
 module.exports = $root;
