@@ -38,8 +38,9 @@ var util = require("../util/minimal");
  * @param {RPCImpl} rpcImpl RPC implementation
  * @param {boolean} [requestDelimited=false] Whether requests are length-delimited
  * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
+ * @param {boolean} [rawMessages=false] Whether to disable message encoding and decoding
  */
-function Service(rpcImpl, requestDelimited, responseDelimited) {
+function Service(rpcImpl, requestDelimited, responseDelimited, rawMessages) {
 
     if (typeof rpcImpl !== "function")
         throw TypeError("rpcImpl must be a function");
@@ -63,6 +64,12 @@ function Service(rpcImpl, requestDelimited, responseDelimited) {
      * @type {boolean}
      */
     this.responseDelimited = Boolean(responseDelimited);
+
+    /**
+     * Whether to disable message encoding and decoding.
+     * @type {boolean}
+     */
+    this.rawMessages = Boolean(rawMessages);
 }
 
 /**
@@ -93,9 +100,11 @@ Service.prototype.rpcCall = function rpcCall(method, requestCtor, responseCtor, 
     try {
         return self.rpcImpl(
             method,
-            requestCtor[self.requestDelimited ? "encodeDelimited" : "encode"](request).finish(),
+            self.rawMessages
+                ? request
+                : requestCtor[self.requestDelimited ? "encodeDelimited" : "encode"](request).finish(),
             function rpcCallback(err, response) {
-
+                debugger;
                 if (err) {
                     self.emit("error", err, method);
                     return callback(err);
@@ -108,7 +117,9 @@ Service.prototype.rpcCall = function rpcCall(method, requestCtor, responseCtor, 
 
                 if (!(response instanceof responseCtor)) {
                     try {
-                        response = responseCtor[self.responseDelimited ? "decodeDelimited" : "decode"](response);
+                        response = self.rawMessages
+                            ? response
+                            : responseCtor[self.responseDelimited ? "decodeDelimited" : "decode"](response);
                     } catch (err) {
                         self.emit("error", err, method);
                         return callback(err);

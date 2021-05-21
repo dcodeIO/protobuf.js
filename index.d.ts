@@ -1334,8 +1334,9 @@ export namespace rpc {
          * @param rpcImpl RPC implementation
          * @param [requestDelimited=false] Whether requests are length-delimited
          * @param [responseDelimited=false] Whether responses are length-delimited
+         * @param [rawMessages=false] Whether to disable message encoding and decoding
          */
-        constructor(rpcImpl: RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
+        constructor(rpcImpl: RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean, rawMessages?: boolean);
 
         /** RPC implementation. Becomes `null` once the service is ended. */
         public rpcImpl: (RPCImpl|null);
@@ -1345,6 +1346,9 @@ export namespace rpc {
 
         /** Whether responses are length-delimited. */
         public responseDelimited: boolean;
+
+        /** Whether to disable message encoding and decoding. */
+        public rawMessages: boolean;
 
         /**
          * Calls a service method through {@link rpc.Service#rpcImpl|rpcImpl}.
@@ -1371,14 +1375,14 @@ export namespace rpc {
  * @param requestData Request data
  * @param callback Callback function
  */
-type RPCImpl = (method: (Method|rpc.ServiceMethod<Message<{}>, Message<{}>>), requestData: Uint8Array, callback: RPCImplCallback) => void;
+type RPCImpl = (method: (Method|rpc.ServiceMethod<Message<{}>, Message<{}>>), requestData: Uint8Array | {}, callback: RPCImplCallback) => void;
 
 /**
  * Node-style callback as used by {@link RPCImpl}.
  * @param error Error, if any, otherwise `null`
  * @param [response] Response data or `null` to signal end of stream, if there hasn't been an error
  */
-type RPCImplCallback = (error: (Error|null), response?: (Uint8Array|null)) => void;
+type RPCImplCallback = (error: (Error|null), response?: (Uint8Array|{}|null)) => void;
 
 /** Reflected service. */
 export class Service extends NamespaceBase {
@@ -1418,9 +1422,10 @@ export class Service extends NamespaceBase {
      * @param rpcImpl RPC implementation
      * @param [requestDelimited=false] Whether requests are length-delimited
      * @param [responseDelimited=false] Whether responses are length-delimited
+     * @param [rawMessages=false] Whether to disable message encoding and decoding
      * @returns RPC service. Useful where requests and/or responses are streamed.
      */
-    public create(rpcImpl: RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean): rpc.Service;
+    public create(rpcImpl: RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean, rawMessages?: boolean): rpc.Service;
 }
 
 /** Service descriptor. */

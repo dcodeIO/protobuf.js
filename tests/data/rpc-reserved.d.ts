@@ -1,7 +1,7 @@
 import * as $protobuf from "../..";
 export class MyService extends $protobuf.rpc.Service {
-    constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
-    public static create(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean): MyService;
+    constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean, rawMessages?: boolean);
+    public static create(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean, rawMessages?: boolean): MyService;
     public delete(request: IMyRequest, callback: MyService.DeleteCallback): void;
     public delete(request: IMyRequest): Promise<MyResponse>;
 }
